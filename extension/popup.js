@@ -5,7 +5,7 @@ function onLoad() {
     let url = tabs[0].url;
 
     var button = document.createElement("a");
-    button.href = `https://gredi.vercel.app/api?url=${url}`;
+    button.href = `https://autoshop-ic.vercel.app/api?url=${url}`;
     button.target = "_blank";
     button.innerText = "Get Shopping List";
 
