@@ -1,0 +1,10 @@
+{
+  "name": "Get Ingredients",
+  "description": "Gets ingredients from recipe page",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs"]
+}
