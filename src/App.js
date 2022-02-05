@@ -28,6 +28,8 @@ export default function App() {
         {ingredients.map((ingredient) => (
           <Typography>{ingredient.line}</Typography>
         ))}
+
+        <Typography>Prices:</Typography>
       </Box>
     </Container>
   );
