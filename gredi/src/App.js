@@ -18,13 +18,16 @@ export default function App() {
   useEffect(() => {
     fetch(`https://autoshop-ic.vercel.app/api?url=${url}`)
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then((data) => setIngredients(data));
   }, [url]);
 
   return (
     <Container>
       <Box>
-        <Typography>{url}</Typography>
+        <Typography>Ingredients Found:</Typography>
+        {ingredients.map((ingredient) => (
+          <Typography>{ingredient.line}</Typography>
+        ))}
       </Box>
     </Container>
   );
