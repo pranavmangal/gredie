@@ -16,7 +16,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetch(`https://autoshop-ic.vercel.app/api?url=${url}`)
+    fetch(`/api?url=${url}`)
       .then((res) => res.json())
       .then((data) => setIngredients(data));
   }, [url]);
