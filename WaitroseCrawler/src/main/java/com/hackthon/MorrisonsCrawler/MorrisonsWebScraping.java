@@ -2,17 +2,66 @@ package com.hackthon.MorrisonsCrawler;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+
 import com.hackthon.WaitroseCrawler.WaitroseWebScrapper;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.Resource;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
+@Resource
+class WebPageInfo {
+    String website;
+    float totalPrice;
+    List<Ingredient> itemList;
+
+    public WebPageInfo(String website, float totalPrice, List<Ingredient> itemList) {
+        this.website = website;
+        this.totalPrice = totalPrice;
+        this.itemList = itemList;
+    }
+
+    @Override
+    public String toString() {
+        return "WebPageInfo{" +
+                "totalPrice=" + totalPrice +
+                ", itemList=" + itemList +
+                '}';
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public List<Ingredient> getItemList() {
+        return itemList;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setItemList(List<Ingredient> itemList) {
+        this.itemList = itemList;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+}
 
 @RestController
 public class MorrisonsWebScraping {
@@ -92,7 +141,8 @@ public class MorrisonsWebScraping {
     }
 
     @GetMapping("/getMorrisonsPrice")
-    public float getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
+    @ResponseBody
+    public WebPageInfo getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
 
         // All ingredients
         HashMap<String,Float> listOfIngredients = new HashMap<>();
@@ -100,12 +150,16 @@ public class MorrisonsWebScraping {
         // Initiate web scraper
         MorrisonsWebScraping webScraper = new MorrisonsWebScraping();
         String[] itemList = items.split(",");
+        ArrayList<Ingredient> retList = new ArrayList<>();
         for(String item:itemList){
             Ingredient getIngredient = webScraper.findItem(item);
             // Add item to the ingredients list
             listOfIngredients.put(getIngredient.getName(), getIngredient.getPrice());
+            retList.add(getIngredient);
         }
-        return webScraper.sumPrices(listOfIngredients);
+//        return webScraper.sumPrices(listOfIngredients);
+        WebPageInfo webPageInfo = new WebPageInfo("Morrisons",webScraper.sumPrices(listOfIngredients), retList);
+        return webPageInfo;
     }
 
     public static void main(String[] args) throws IOException {

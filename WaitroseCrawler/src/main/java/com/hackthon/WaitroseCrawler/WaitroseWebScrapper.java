@@ -6,14 +6,14 @@ package com.hackthon.WaitroseCrawler;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.springframework.boot.SpringApplication;
+import com.hackthon.Pair;
+import com.hackthon.WebPageInfo;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -38,96 +38,6 @@ import java.util.Optional;
 //
 //}
 
-
-@Resource
-class WebPageInfo {
-    String website;
-    float totalPrice;
-    List<Pair> itemList;
-    WebPageInfo(String website, float totalPrice, List<Pair> itemList){
-        this.website = website;
-        this.totalPrice = totalPrice;
-        this.itemList = itemList;
-    }
-
-    @Override
-    public String toString() {
-        return "WebPageInfo{" +
-                "totalPrice=" + totalPrice +
-                ", itemList=" + itemList +
-                '}';
-    }
-
-    public float getTotalPrice() {
-        return totalPrice;
-    }
-
-    public List<Pair> getItemList() {
-        return itemList;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setItemList(List<Pair> itemList) {
-        this.itemList = itemList;
-    }
-
-    public void setTotalPrice(float totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-}
-
-@Resource
-class Pair{
-    String name;
-    float price;
-    float unit;
-    Pair(String name, float price, float unit){
-        this.name = name;
-        this.price = price;
-        this.unit = unit;
-    }
-
-    @Override
-    public String toString() {
-        return "Pair{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", unit=" + unit +
-                '}';
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public float getUnit() {
-        return unit;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public void setUnit(float unit) {
-        this.unit = unit;
-    }
-
-}
 
 @SpringBootApplication
 @RestController
@@ -189,7 +99,7 @@ public class WaitroseWebScrapper {
         Optional<Pair> min = pairArrayList.stream().min(new Comparator<Pair>() {
             @Override
             public int compare(Pair o1, Pair o2) {
-                return (int) (o1.unit- o2.unit);
+                return (int) (o1.getUnit()- o2.getUnit());
             }
         });
 //        System.out.println(min.get());
@@ -210,7 +120,7 @@ public class WaitroseWebScrapper {
         //return total price
         float sum = 0;
         for(Pair pair : pairArrayList){
-            sum += pair.price;
+            sum += pair.getPrice();
         }
         DecimalFormat df = new DecimalFormat("0.00");
 
