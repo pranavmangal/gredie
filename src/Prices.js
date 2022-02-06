@@ -8,16 +8,25 @@ const morrisons_url = "http://localhost:8080/getMorrisonsPrice?items=";
 
 export default function Prices({ ingredients }) {
   const [waitrosePrice, setWaitrosePrice] = useState(0);
+  const [waitroseItems, setWaitroseItems] = useState([]);
+
   const [morrisonsPrice, setMorrisonsPrice] = useState(0);
+  const [morrisonsItems, setMorrisonsItems] = useState([]);
 
   useEffect(() => {
     fetch(waitrose_url + getIngredientNames())
-      .then((res) => res.text())
-      .then((data) => setWaitrosePrice(parseFloat(data).toFixed(2)));
+      .then((res) => res.json())
+      .then((data) => {
+        setWaitrosePrice(parseFloat(data.totalPrice).toFixed(2));
+        setWaitroseItems(data.itemList);
+      });
 
     fetch(morrisons_url + getIngredientNames())
-      .then((res) => res.text())
-      .then((data) => setMorrisonsPrice(parseFloat(data).toFixed(2)));
+      .then((res) => res.json())
+      .then((data) => {
+        setMorrisonsPrice(parseFloat(data.totalPrice).toFixed(2));
+        setMorrisonsItems(data.itemList);
+      });
   }, [ingredients]);
 
   function getIngredientNames() {
@@ -32,13 +41,31 @@ export default function Prices({ ingredients }) {
             Prices
           </Typography>
 
-          <Box display="flex" alignItems="center">
+          <Box display="flex">
             {waitrosePrice !== 0 && (
-              <Price name="Waitrose" price={waitrosePrice} />
+              <Box style={{ marginRight: 80 }}>
+                <Price name="Waitrose" price={waitrosePrice} />
+                {waitroseItems.map((item, key) => (
+                  <Box key={key}>
+                    <Typography variant="h6">
+                      {item.name} - £{item.price}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
             )}
 
             {morrisonsPrice !== 0 && (
-              <Price name="Morrisons" price={morrisonsPrice} />
+              <Box style={{ marginRight: 80 }}>
+                <Price name="Morrisons" price={morrisonsPrice} />
+                {morrisonsItems.map((item, key) => (
+                  <Box key={key}>
+                    <Typography variant="h6">
+                      {item.name} - £{item.price}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
             )}
           </Box>
         </Box>
@@ -54,11 +81,11 @@ export default function Prices({ ingredients }) {
 
 function Price({ name, price }) {
   return (
-    <Box display="flex" flexDirection="column" style={{ marginRight: 40 }}>
+    <Box display="flex" flexDirection="column">
       <Typography variant="h5" style={{ marginBottom: 20 }}>
         {name}
       </Typography>
-      <Typography variant="h4">£ {price}</Typography>
+      <Typography variant="h4">£{price}</Typography>
     </Box>
   );
 }
