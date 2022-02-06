@@ -69,9 +69,15 @@ public class WaitroseWebScrapper {
                 //get Name and Price
                 String name = ele.getAttributes().getNamedItem("data-product-name").getNodeValue();
                 String priceEle = ele.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(0).
+<<<<<<< HEAD
                         getChildNodes().get(0).getChildNodes().get(1).getFirstChild().getFirstChild().toString();
                 String url = ele.getChildNodes().get(1).getChildNodes().get(0).getChildNodes().get(0).getChildNodes()
                         .get(0).toString();
+=======
+                    getChildNodes().get(0).getChildNodes().get(1).getFirstChild().getFirstChild().toString();
+                String url = ele.getChildNodes().get(1).getChildNodes().get(0).getChildNodes().get(0).getChildNodes()
+                    .get(0).toString();
+>>>>>>> 0f29e24a0a65b84ea3caefddf956c1857bd945b4
                 url = url.substring(20, url.length()-3);
                 url = "https://www.waitrose.com" + url;
                 float price = 0;
@@ -82,7 +88,7 @@ public class WaitroseWebScrapper {
                 }
 
                 String unit = ele.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(0)
-                        .getChildNodes().get(1).getChildNodes().get(1).toString();
+                    .getChildNodes().get(1).getChildNodes().get(1).toString();
                 if(unit.contains("/kg")){
                     unit = unit.substring(0, unit.length() - "/kg".length());
                     float unit_price = 0;

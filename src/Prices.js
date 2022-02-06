@@ -27,6 +27,14 @@ export default function Prices({ ingredients }) {
         setMorrisonsPrice(parseFloat(data.totalPrice).toFixed(2));
         setMorrisonsItems(data.itemList);
       });
+
+    fetch(
+      `https://api.allorigins.win/get?url=${encodeURIComponent(
+        "https://crossorigin.me/https://www.sainsburys.co.uk/groceries-api/gol-services/product/v1/product?filter[keyword]=tomato&page_number=1&page_size=60"
+      )}`
+    )
+      .then((res) => res.json())
+      .then((data) => console.log(data.products));
   }, [ingredients]);
 
   function getIngredientNames() {
@@ -48,7 +56,7 @@ export default function Prices({ ingredients }) {
                 {waitroseItems.map((item, key) => (
                   <Box key={key}>
                     <Typography variant="h6">
-                      {item.name} - £{item.price}
+                      <a href={item.url}>{item.name}</a> - £{item.price}
                     </Typography>
                   </Box>
                 ))}

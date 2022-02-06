@@ -14,12 +14,15 @@ public class Pair {
         this.price = price;
         this.unit = unit;
         this.url = url;
+<<<<<<< HEAD
     }
 
     public Pair(String name, float price) {
         this.name = name;
         this.price = price;
         this.unit = 0;
+=======
+>>>>>>> 0f29e24a0a65b84ea3caefddf956c1857bd945b4
     }
 
     @Override
@@ -59,7 +62,18 @@ public class Pair {
         this.unit = unit;
     }
 
+<<<<<<< HEAD
     public void setUrl(String url) {
         this.url = url;
     }
+=======
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String name) {
+        this.url = url;
+    }
+
+>>>>>>> 0f29e24a0a65b84ea3caefddf956c1857bd945b4
 }
