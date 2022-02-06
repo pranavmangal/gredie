@@ -6,9 +6,12 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
+const waitrose_url = "http://localhost:8080/getWaitrosePrice?items=";
+
 export default function App() {
   const [url, setUrl] = useState("");
   const [ingredients, setIngredients] = useState([]);
+  const [waitrosePrice, setWaitrosePrice] = useState(0);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -21,17 +24,37 @@ export default function App() {
       .then((data) => setIngredients(data.ingredients));
   }, [url]);
 
+  useEffect(() => {
+    fetch(waitrose_url + getIngredientNames())
+      .then((res) => res.text())
+      .then((data) => setWaitrosePrice(data));
+  }, [ingredients]);
+
+  function getIngredientNames() {
+    return ingredients.map((ingredient) => ingredient.name).join(",");
+  }
+
   return (
     <Container>
       <Box>
-        <Typography>Ingredients Found:</Typography>
-        {ingredients.map((ingredient) => (
-          <Typography>{ingredient.line}</Typography>
-        ))}
+        {Object.keys(ingredients).length !== 0 ? (
+          <Box>
+            <Typography>Ingredients Found:</Typography>
+            {ingredients.map((ingredient, key) => (
+              <Typography key={key}>{ingredient.line}</Typography>
+            ))}
 
-        <Box style={{ padding: "100px" }} />
+            <Box style={{ padding: "40px" }} />
 
-        <Typography>Prices:</Typography>
+            <Typography>Prices</Typography>
+
+            {waitrosePrice !== 0 && (
+              <Typography>Waitrose: {waitrosePrice}</Typography>
+            )}
+          </Box>
+        ) : (
+          <Typography>No Ingredients Found</Typography>
+        )}
       </Box>
     </Container>
   );
