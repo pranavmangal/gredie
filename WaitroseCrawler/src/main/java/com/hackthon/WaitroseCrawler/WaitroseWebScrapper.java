@@ -2,6 +2,7 @@ package com.hackthon.WaitroseCrawler;
 
 
 
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -9,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
 
 //@SpringBootApplication
 //@RestController
@@ -34,6 +37,41 @@ import java.util.Optional;
 //    }
 //
 //}
+
+
+@Resource
+class WebPageInfo {
+    float totalPrice;
+    List<Pair> itemList;
+    WebPageInfo(float totalPrice, List<Pair> itemList){
+        this.totalPrice = totalPrice;
+        this.itemList = itemList;
+    }
+
+    @Override
+    public String toString() {
+        return "WebPageInfo{" +
+                "totalPrice=" + totalPrice +
+                ", itemList=" + itemList +
+                '}';
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public List<Pair> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<Pair> itemList) {
+        this.itemList = itemList;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+}
 
 @Resource
 class Pair{
@@ -54,6 +92,31 @@ class Pair{
                 ", unit=" + unit +
                 '}';
     }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public float getUnit() {
+        return unit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public void setUnit(float unit) {
+        this.unit = unit;
+    }
+
 }
 
 @SpringBootApplication
@@ -123,7 +186,8 @@ public class WaitroseWebScrapper {
         return min;
     }
     @GetMapping("/getWaitrosePrice")
-    public float getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
+    @ResponseBody
+    public WebPageInfo getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
         String[] item_list = items.split(",");
         WaitroseWebScrapper webScrapper = new WaitroseWebScrapper();
         ArrayList<Pair> pairArrayList = new ArrayList<>();
@@ -140,7 +204,8 @@ public class WaitroseWebScrapper {
         }
         DecimalFormat df = new DecimalFormat("0.00");
 
-        return Float.parseFloat(df.format(sum));
+        WebPageInfo webPageInfo = new WebPageInfo(Float.parseFloat(df.format(sum)), pairArrayList);
+        return webPageInfo;
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
