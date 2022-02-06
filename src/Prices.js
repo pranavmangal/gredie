@@ -13,11 +13,11 @@ export default function Prices({ ingredients }) {
   useEffect(() => {
     fetch(waitrose_url + getIngredientNames())
       .then((res) => res.text())
-      .then((data) => setWaitrosePrice(data));
+      .then((data) => setWaitrosePrice(parseFloat(data).toFixed(2)));
 
     fetch(morrisons_url + getIngredientNames())
       .then((res) => res.text())
-      .then((data) => setMorrisonsPrice(data));
+      .then((data) => setMorrisonsPrice(parseFloat(data).toFixed(2)));
   }, [ingredients]);
 
   function getIngredientNames() {
