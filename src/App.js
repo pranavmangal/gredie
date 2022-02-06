@@ -18,7 +18,7 @@ export default function App() {
   useEffect(() => {
     fetch(`/api?url=${url}`)
       .then((res) => res.json())
-      .then((data) => setIngredients(data));
+      .then((data) => setIngredients(data.ingredients));
   }, [url]);
 
   return (
@@ -28,6 +28,8 @@ export default function App() {
         {ingredients.map((ingredient) => (
           <Typography>{ingredient.line}</Typography>
         ))}
+
+        <Box style={{ padding: "100px" }} />
 
         <Typography>Prices:</Typography>
       </Box>
