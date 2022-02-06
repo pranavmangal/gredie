@@ -5,10 +5,12 @@ import { Box, Typography } from "@mui/material";
 export default function Ingredients({ ingredients }) {
   return (
     <Box>
-      <Typography>Ingredients Found:</Typography>
+      <Typography variant="h5" style={{ marginBottom: 10 }}>
+        Ingredients Found
+      </Typography>
 
       {ingredients.map((ingredient, key) => (
-        <Typography key={key}>{ingredient.line}</Typography>
+        <Typography key={key}>• {ingredient.line}</Typography>
       ))}
     </Box>
   );
