@@ -1,64 +1,59 @@
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomText;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-
-
-public class SainsburrysWebsiteScraper {
+public class IcelandWebsiteScraper {
 
   HtmlPage page;
   WebClient webClient = new WebClient();
 
-  List<DomText> searchedItems = new ArrayList<>();
-  String sainsburrysUrlPrefix = "https://www.iceland.co.uk/search?q=";
-  String sainsburrysUrlSuffix = "&lang=default";
-  public SainsburrysWebsiteScraper() throws IOException {
+  String icelandUrlPrefix = "https://www.iceland.co.uk/search?q=";
+  String icelandUrlSuffix = "&lang=default";
 
-    //page = GetWebPageSainsburrys(sainsburrysUrl);
-
-  }
-
-  private HtmlPage GetWebPageSainsburrys(String sainsburrysUrl) throws IOException {
+  private HtmlPage getWebPageIceland(String icelandUrl) throws IOException {
     webClient.getOptions().setJavaScriptEnabled(false);
     webClient.getOptions().setCssEnabled(false);
 
-    return webClient.getPage(sainsburrysUrl);
+    return webClient.getPage(icelandUrl);
   }
 
   public ItemDescription extractInfo(String args) throws IOException {
-    String URL = sainsburrysUrlPrefix+args+sainsburrysUrlSuffix;
-    page = GetWebPageSainsburrys(URL);
+    String url = icelandUrlPrefix + args + icelandUrlSuffix;
+    page = getWebPageIceland(url);
     List<DomText> searchedItems = page.getByXPath("//span/text()");
 
     List<Float> results = new ArrayList<>();
 
     String regex = "(£[0-9]+.[0-9]*)";
-    for (DomText domText: searchedItems) {
+    for (DomText domText : searchedItems) {
       String txt = domText.toString();
       Pattern p = Pattern.compile(regex);
       Matcher m = p.matcher(txt);
       if (m.find() && (!m.group(0).equals("£0.00"))) {
-        System.out.println(m.group(0));
         results.add(Float.valueOf(m.group(0).substring(1)));
       }
     }
+
     Optional<Float> min = results.stream().min(new Comparator<Float>() {
       @Override
       public int compare(Float o1, Float o2) {
         if (o1 < o2) {
           return -1;
-        }else if (o1 == o2) {return 0;}
-        else {return 1;}
-      }});
+        } else if (o1 == o2) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
+    });
+
     if (min.isPresent()) {
       return new ItemDescription("Iceland " + args, min.get());
     } else {
@@ -67,8 +62,7 @@ public class SainsburrysWebsiteScraper {
   }
 
   public static void main(String[] args) throws IOException {
-    SainsburrysWebsiteScraper sainsburrysWebsiteScraper = new SainsburrysWebsiteScraper();
-    System.out.println(sainsburrysWebsiteScraper.extractInfo("apple"));
+    IcelandWebsiteScraper icelandWebsiteScraper = new IcelandWebsiteScraper();
+    System.out.println(icelandWebsiteScraper.extractInfo(args[0]));
   }
-
 }

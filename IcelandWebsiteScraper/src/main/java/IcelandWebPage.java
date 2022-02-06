@@ -1,5 +1,3 @@
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.List;
 
 public class IcelandWebPage {
@@ -15,22 +13,27 @@ public class IcelandWebPage {
 
   @Override
   public String toString() {
+
     return "WebPageInfo{" + "Total Price=" + totalPrice + ", Item List=" + listItems + "}";
   }
 
   public float getTotalPrice() {
+
     return totalPrice;
   }
 
   public List<ItemDescription> getListItems() {
+
     return listItems;
   }
 
   public String getNameWebsite() {
+
     return nameWebsite;
   }
 
   public void setListItems(List<ItemDescription> listItems) {
+
     this.listItems = listItems;
   }
 

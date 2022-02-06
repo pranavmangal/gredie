@@ -9,6 +9,6 @@ public class ItemDescription {
 
   @Override
   public String toString() {
-    return "Iceland " + itemName + "wi";
+    return itemName + " with the price of £" + itemPrice;
   }
 }
