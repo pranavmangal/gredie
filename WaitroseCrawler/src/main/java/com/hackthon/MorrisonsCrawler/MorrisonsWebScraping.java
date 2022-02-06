@@ -3,6 +3,7 @@ package com.hackthon.MorrisonsCrawler;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import com.hackthon.WaitroseCrawler.WaitroseWebScrapper;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -91,6 +92,7 @@ public class MorrisonsWebScraping {
         return sum;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getMorrisonsPrice")
     public float getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
 

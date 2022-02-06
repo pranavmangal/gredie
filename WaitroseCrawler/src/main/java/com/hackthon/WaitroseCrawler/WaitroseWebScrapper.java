@@ -8,6 +8,7 @@ import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -195,6 +196,8 @@ public class WaitroseWebScrapper {
 //        System.out.println(min.get());
         return min;
     }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getWaitrosePrice")
     @ResponseBody
     public WebPageInfo getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
