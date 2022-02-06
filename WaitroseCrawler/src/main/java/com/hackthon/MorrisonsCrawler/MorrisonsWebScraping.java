@@ -77,7 +77,7 @@ public class MorrisonsWebScraping {
     }
 
     // Returns the best ingredient for a given item
-    public Ingredient findItem(String itemString) throws IOException {
+    public Pair findItem(String itemString) throws IOException {
         // Search for the item in the search bar
         itemString = itemString.toLowerCase(Locale.ROOT);
         DomElement inputField = page.getElementById("findText");
@@ -123,16 +123,16 @@ public class MorrisonsWebScraping {
             }
         }
         System.out.println("Best item: "+currentItemName);
-        Ingredient newIngredient = new Ingredient(currentItemName,currentSmallestPrice);
+        Ingredient newIngredient = new Pair(currentItemName,currentSmallestPrice);
         return newIngredient;
     }
 
     // Return total price of ingredients from this store
-    public Float sumPrices(HashMap<String,Float> listOfIngredients){
+    public Float sumPrices(ArrayList<Pair> listOfIngredients){
 
         Float sum = 0f;
-        for (Float val : listOfIngredients.values()){
-            sum += val;
+        for (Pair ingredient : listOfIngredients){
+            sum += ingredient.getPrice();
         }
         return sum;
     }
@@ -163,7 +163,7 @@ public class MorrisonsWebScraping {
     public static void main(String[] args) throws IOException {
 
         // All ingredients
-        HashMap<String,Float> listOfIngredients = new HashMap<>();
+        Arraylist<Pair> listOfIngredients = new HashMap<>();
 
         // Initiate web scraper
         MorrisonsWebScraping webScraper = new MorrisonsWebScraping();
@@ -171,9 +171,9 @@ public class MorrisonsWebScraping {
 
         // Search for each item in the product list
         for(String item:itemList){
-            Ingredient getIngredient = webScraper.findItem(item);
+            Pair getIngredient = webScraper.findItem(item);
             // Add item to the ingredients list
-            listOfIngredients.put(getIngredient.getName(), getIngredient.getPrice());
+            listOfIngredients.add(getIngredient);
         }
         System.out.println(webScraper.sumPrices(listOfIngredients));
     }

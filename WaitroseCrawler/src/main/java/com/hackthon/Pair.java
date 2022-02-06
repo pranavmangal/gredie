@@ -14,6 +14,12 @@ public class Pair {
         this.unit = unit;
     }
 
+    public Pair(String name, float price) {
+        this.name = name;
+        this.price = price;
+        this.unit = 0;
+    }
+
     @Override
     public String toString() {
         return "Pair{" +
