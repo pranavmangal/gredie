@@ -7,11 +7,13 @@ public class Pair {
     String name;
     float price;
     float unit;
+    String url;
 
-    public Pair(String name, float price, float unit) {
+    public Pair(String name, float price, float unit, String url) {
         this.name = name;
         this.price = price;
         this.unit = unit;
+        this.url = url;
     }
 
     @Override
@@ -45,6 +47,14 @@ public class Pair {
 
     public void setUnit(float unit) {
         this.unit = unit;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String name) {
+        this.url = url;
     }
 
 }
