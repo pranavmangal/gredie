@@ -70,13 +70,17 @@ public class WaitroseWebScrapper {
                 String name = ele.getAttributes().getNamedItem("data-product-name").getNodeValue();
                 String priceEle = ele.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(0).
                         getChildNodes().get(0).getChildNodes().get(1).getFirstChild().getFirstChild().toString();
+                String url = ele.getChildNodes().get(1).getChildNodes().get(0).getChildNodes().get(0).getChildNodes()
+                        .get(0).toString();
+                url = url.substring(20, url.length()-3);
+                url = "https://www.waitrose.com" + url;
                 float price = 0;
                 if(priceEle.contains("£")){
                     price = Float.parseFloat(priceEle.substring(1));
                 }else if (priceEle.contains("p")){
                     price = Float.parseFloat("0."+priceEle.substring(0, priceEle.length()-1));
                 }
-//            System.out.println(index++);
+
                 String unit = ele.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(0)
                         .getChildNodes().get(1).getChildNodes().get(1).toString();
                 if(unit.contains("/kg")){
@@ -87,7 +91,7 @@ public class WaitroseWebScrapper {
                     }else if (unit.contains("p")){
                         unit_price = Float.parseFloat("0."+unit.substring(0, unit.length()-1));
                     }
-                    Pair pair = new Pair(name, price, unit_price);
+                    Pair pair = new Pair(name, price, unit_price, url);
                     pairArrayList.add(pair);
                 }
             }catch (Exception e){
