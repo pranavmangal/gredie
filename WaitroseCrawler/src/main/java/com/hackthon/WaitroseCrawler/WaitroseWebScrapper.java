@@ -2,22 +2,26 @@ package com.hackthon.WaitroseCrawler;
 
 
 
+
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.springframework.boot.SpringApplication;
+import com.hackthon.Pair;
+import com.hackthon.WebPageInfo;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
 
 //@SpringBootApplication
 //@RestController
@@ -35,26 +39,6 @@ import java.util.Optional;
 //
 //}
 
-@Resource
-class Pair{
-    String name;
-    float price;
-    float unit;
-    Pair(String name, float price, float unit){
-        this.name = name;
-        this.price = price;
-        this.unit = unit;
-    }
-
-    @Override
-    public String toString() {
-        return "Pair{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", unit=" + unit +
-                '}';
-    }
-}
 
 @SpringBootApplication
 @RestController
@@ -86,13 +70,17 @@ public class WaitroseWebScrapper {
                 String name = ele.getAttributes().getNamedItem("data-product-name").getNodeValue();
                 String priceEle = ele.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(0).
                         getChildNodes().get(0).getChildNodes().get(1).getFirstChild().getFirstChild().toString();
+                String url = ele.getChildNodes().get(1).getChildNodes().get(0).getChildNodes().get(0).getChildNodes()
+                        .get(0).toString();
+                url = url.substring(20, url.length()-3);
+                url = "https://www.waitrose.com" + url;
                 float price = 0;
                 if(priceEle.contains("£")){
                     price = Float.parseFloat(priceEle.substring(1));
                 }else if (priceEle.contains("p")){
                     price = Float.parseFloat("0."+priceEle.substring(0, priceEle.length()-1));
                 }
-//            System.out.println(index++);
+
                 String unit = ele.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(0)
                         .getChildNodes().get(1).getChildNodes().get(1).toString();
                 if(unit.contains("/kg")){
@@ -103,7 +91,7 @@ public class WaitroseWebScrapper {
                     }else if (unit.contains("p")){
                         unit_price = Float.parseFloat("0."+unit.substring(0, unit.length()-1));
                     }
-                    Pair pair = new Pair(name, price, unit_price);
+                    Pair pair = new Pair(name, price, unit_price, url);
                     pairArrayList.add(pair);
                 }
             }catch (Exception e){
@@ -116,14 +104,17 @@ public class WaitroseWebScrapper {
         Optional<Pair> min = pairArrayList.stream().min(new Comparator<Pair>() {
             @Override
             public int compare(Pair o1, Pair o2) {
-                return (int) (o1.unit- o2.unit);
+                return (int) (o1.getUnit()- o2.getUnit());
             }
         });
 //        System.out.println(min.get());
         return min;
     }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getWaitrosePrice")
-    public float getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
+    @ResponseBody
+    public WebPageInfo getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
         String[] item_list = items.split(",");
         WaitroseWebScrapper webScrapper = new WaitroseWebScrapper();
         ArrayList<Pair> pairArrayList = new ArrayList<>();
@@ -136,11 +127,12 @@ public class WaitroseWebScrapper {
         //return total price
         float sum = 0;
         for(Pair pair : pairArrayList){
-            sum += pair.price;
+            sum += pair.getPrice();
         }
         DecimalFormat df = new DecimalFormat("0.00");
 
-        return Float.parseFloat(df.format(sum));
+        WebPageInfo webPageInfo = new WebPageInfo("Waitrose",Float.parseFloat(df.format(sum)), pairArrayList);
+        return webPageInfo;
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
