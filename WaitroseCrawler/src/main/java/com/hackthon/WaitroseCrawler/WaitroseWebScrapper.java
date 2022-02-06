@@ -41,9 +41,11 @@ import java.util.Optional;
 
 @Resource
 class WebPageInfo {
+    String website;
     float totalPrice;
     List<Pair> itemList;
-    WebPageInfo(float totalPrice, List<Pair> itemList){
+    WebPageInfo(String website, float totalPrice, List<Pair> itemList){
+        this.website = website;
         this.totalPrice = totalPrice;
         this.itemList = itemList;
     }
@@ -64,12 +66,20 @@ class WebPageInfo {
         return itemList;
     }
 
+    public String getWebsite() {
+        return website;
+    }
+
     public void setItemList(List<Pair> itemList) {
         this.itemList = itemList;
     }
 
     public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }
 
@@ -204,7 +214,7 @@ public class WaitroseWebScrapper {
         }
         DecimalFormat df = new DecimalFormat("0.00");
 
-        WebPageInfo webPageInfo = new WebPageInfo(Float.parseFloat(df.format(sum)), pairArrayList);
+        WebPageInfo webPageInfo = new WebPageInfo("Waitrose",Float.parseFloat(df.format(sum)), pairArrayList);
         return webPageInfo;
     }
 
