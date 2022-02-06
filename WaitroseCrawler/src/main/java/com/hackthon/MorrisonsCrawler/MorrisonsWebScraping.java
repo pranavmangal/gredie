@@ -5,10 +5,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 
 import com.hackthon.WaitroseCrawler.WaitroseWebScrapper;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -140,6 +137,7 @@ public class MorrisonsWebScraping {
         return sum;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getMorrisonsPrice")
     @ResponseBody
     public WebPageInfo getTotalPrice(@RequestParam(value = "items") String items) throws IOException {
